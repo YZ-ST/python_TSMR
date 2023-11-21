@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- For Bootstrap 5 -->
+    <title>訂票系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!--<link href="../static/css/index.css" rel="stylesheet" type="text/css"></script>-->
+    <link rel="icon" type="image/png" href="../static/img/railway-station.png">
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="../static/js/formValidation.js"></script>
+    <script>
+      // TODO 日期填寫建議
+    </script>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <div>
+            <img src="/static/img/train-line.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            訂票系統
+          </div>
+        </a>
+      </div>
+    </nav>
+
+    <table valign="center" align="center">
+      <tr>
+        <td height="10px"  colspan="3"></td>
+      </tr>
+      <tr>
+        <td width="10%"></td>
+        <td>
+          <form class="row g-3 needs-validation" action="/crawler_TSMR" method="post" onsubmit="return validateForSave()">
+            <input type="text" id="user_id" name="user_id" style="display: none;">
+            <div class="col-12">
+              <label for="depart_station" class="form-label">出發站</label><span style="color:red;">* </span>
+              <select id="depart_station" name="depart_station" class="form-select" onblur="checkStation()">
+                <option selected>南港</option>
+                <option>台北</option>
+                <option>板橋</option>
+                <option>桃園</option>
+                <option>新竹</option>
+                <option>苗栗</option>
+                <option>台中</option>
+                <option>彰化</option>
+                <option>雲林</option>
+                <option>嘉義</option>
+                <option>台南</option>
+                <option>左營</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="arrive_station" class="form-label">抵達站</label><span style="color:red;">* </span>
+              <span id="check_arrive_station" style="color:red;"></span>
+              <select id="arrive_station" name="arrive_station" class="form-select" onblur="checkStation()">
+                <option selected>南港</option>
+                <option>台北</option>
+                <option>板橋</option>
+                <option>桃園</option>
+                <option>新竹</option>
+                <option>苗栗</option>
+                <option>台中</option>
+                <option>彰化</option>
+                <option>雲林</option>
+                <option>嘉義</option>
+                <option>台南</option>
+                <option>左營</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="book_ticket_time" class="form-label">出發日期(西元年)</label><span style="color:red;">* </span>
+              <span id="check_book_ticket_time" name="check_book_ticket_time" style="color:red;"></span>
+              <br><span style="color:rgb(59, 59, 187);">可在高鐵票務通路預訂29天內(含乘車當日)之車票，每逢週五及週六至多可預訂四週後至週日之車票</span>
+              <input type="date" id="book_ticket_time" name="book_ticket_time" class="form-control" onblur="checkDate()" required>
+            </div>
+            <div class="col-12">
+              <label for="depart_time" class="form-label">出發時間-預計最早</label><span style="color:red;">* </span>
+              <span id="check_depart_time" name="check_depart_time" style="color:red;"></span>
+              <select id="depart_time" name="depart_time" class="form-select" onblur="changeDepartTime()">
+                <option selected>00:00</option>
+                <option>00:30</option>
+                <option>05:00</option>
+                <option>05:30</option>
+                <option>06:00</option>
+                <option>06:30</option>
+                <option>07:00</option>
+                <option>07:30</option>
+                <option>08:00</option>
+                <option>08:30</option>
+                <option>09:00</option>
+                <option>09:30</option>
+                <option>10:00</option>
+                <option>10:30</option>
+                <option>11:00</option>
+                <option>11:30</option>
+                <option>12:00</option>
+                <option>12:30</option>
+                <option>13:00</option>
+                <option>13:30</option>
+                <option>14:00</option>
+                <option>14:30</option>
+                <option>15:00</option>
+                <option>15:30</option>
+                <option>16:00</option>
+                <option>16:30</option>
+                <option>17:00</option>
+                <option>17:30</option>
+                <option>18:00</option>
+                <option>18:30</option>
+                <option>19:00</option>
+                <option>19:30</option>
+                <option>20:00</option>
+                <option>20:30</option>
+                <option>21:00</option>
+                <option>21:30</option>
+                <option>22:00</option>
+                <option>22:30</option>
+                <option>23:00</option>
+                <option>23:30</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="end_time" class="form-label">出發時間-預計最晚</label><span style="color:red;">* </span>
+              <select id="end_time" name="end_time" class="form-select" onblur="checkEndTime()">
+                <option selected>00:00</option>
+                <option>00:30</option>
+                <option>05:00</option>
+                <option>05:30</option>
+                <option>06:00</option>
+                <option>06:30</option>
+                <option>07:00</option>
+                <option>07:30</option>
+                <option>08:00</option>
+                <option>08:30</option>
+                <option>09:00</option>
+                <option>09:30</option>
+                <option>10:00</option>
+                <option>10:30</option>
+                <option>11:00</option>
+                <option>11:30</option>
+                <option>12:00</option>
+                <option>12:30</option>
+                <option>13:00</option>
+                <option>13:30</option>
+                <option>14:00</option>
+                <option>14:30</option>
+                <option>15:00</option>
+                <option>15:30</option>
+                <option>16:00</option>
+                <option>16:30</option>
+                <option>17:00</option>
+                <option>17:30</option>
+                <option>18:00</option>
+                <option>18:30</option>
+                <option>19:00</option>
+                <option>19:30</option>
+                <option>20:00</option>
+                <option>20:30</option>
+                <option>21:00</option>
+                <option>21:30</option>
+                <option>22:00</option>
+                <option>22:30</option>
+                <option>23:00</option>
+                <option>23:30</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="ticket_amount" class="form-label">張數(全票)</label><span style="color:red;">* </span>
+              <select id="ticket_amount" name="ticket_amount" class="form-select">
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="national_ID" class="form-label">身分證號</label><span style="color:red;">* </span>
+              <span id="check_national_ID" style="color:red;"></span>
+              <input type="text" id="national_ID" name="national_ID" class="form-control" placeholder="A123456789" onblur="checkNationalId()">
+            </div>
+            <div class="col-12">
+              <label for="phonenumber" class="form-label">電話(選填)</label>
+              <span id="check_phonenumber" style="color:red;"></span>
+              <input type="text" id="phonenumber" name="phonenumber" class="form-control" placeholder="格式：09XXXXXXXX，共10位數" onblur="checkPhoneNumber()">
+            </div>
+            <div class="col-12">
+              <label for="email" class="form-label">電子信箱(選填)</label>
+              <span id="check_email" style="color:red;"></span>
+              <input type="text" id="email" name="email" class="form-control" onblur="checkEmail()">
+            </div>
+            <div class="col-12">
+              <label for="to_go_account" class="form-label">高鐵會員 TGo 帳號(選填)</label>
+              <span id="check_to_go_account" style="color:red;"></span>
+              <input type="text" id="to_go_account" name="to_go_account" class="form-control" onblur="checkTGo()">
+            </div>
+            <div id="finalErrMsg" class="alert alert-danger" role="alert" style="display: none;"></div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">開始訂票</button>
+            </div>
+          </form>
+        </td>
+        <td width="10%"></td>
+      </tr>
+      <tr>
+        <td height="30px" colspan="3"></td>
+      </tr>
+    </table>
+    
+    <script>
+      // 獲取 user_id 並傳入 form
+      var url = new URL(window.location.href);
+      var params = new URLSearchParams(url.search);
+      var userId = params.get('user_id');
+      // if (userId == null) {
+      //   window.location.href="/err";
+      // }
+      user_id.value = userId;
+    </script>
+  </body>
+</html>
